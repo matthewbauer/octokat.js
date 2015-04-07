@@ -189,6 +189,12 @@ define ['chai', 'cs!./test-config'], ({assert, expect}, {client, USERNAME, TOKEN
           .then (moreResults) ->
             done()
 
+      it "#{GH}.gists.public.fetch().then(results) -> results.lastPage.page (parse queryString)", (done) ->
+        trapFail STATE[GH].gists.public.fetch()
+        .then (results) ->
+          expect(results.lastPage.page).to.not.be.null
+          done()
+
 
     describe "#{REPO} = #{GH}.repos(OWNER, NAME)", () ->
 
@@ -224,6 +230,13 @@ define ['chai', 'cs!./test-config'], ({assert, expect}, {client, USERNAME, TOKEN
 
         itIsOk(REPO, 'issues.create', {title: 'Test Issue'})
         itIsOk(REPO, 'issues', 1, 'fetch')
+
+        it "#{REPO}.issues.fetch().then(results) -> results.lastPage.page (parse queryString)", (done) ->
+          trapFail STATE[REPO].issues.fetch()
+          .then (results) ->
+            expect(results.lastPage.page).to.not.be.null
+            done()
+
 
       # itIsOk(REPO, 'pages.fetch')
       # itIsOk(REPO, 'pages.builds.fetch')

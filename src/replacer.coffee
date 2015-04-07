@@ -12,6 +12,24 @@ Chainer = require './chainer'
 #     are sprinkled in.
 # - Converts keys to `camelCase`
 
+# Helper that parses the fields in a querystring.
+# Adds key/value pairs to an object (`acc`) corresponding to parameters
+# in the `link` URL.
+parseQueryString = (link, acc) ->
+  # Could use `querystring.parse(url.parse(linkUrl).query)` but those
+  # files are rather large
+
+  return if /\{\?/.test(link) # Ensures URL Templates are not parsed
+
+  # Skip URLs that do not contain a queryString.
+  if /\?/.test(link)
+    link = link[link.indexOf('?') + 1..]
+    if link.length > 0
+      for pair in link.split('&')
+        [key, val] = pair.split('=')
+        acc[decodeURIComponent(key)] = decodeURIComponent(val)
+
+
 class Replacer
   constructor: (@_request) ->
 
@@ -100,6 +118,9 @@ class Replacer
 
       fn = toPromise(fn)
       fn.url = value
+      # Add all the querystring fields to provide users access
+      # to bits like the page count and number of pages
+      parseQueryString(value, fn)
       newKey = key.substring(0, key.length-'_url'.length)
       acc[plus.camelize(newKey)] = fn
 
