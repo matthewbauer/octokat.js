@@ -6,7 +6,7 @@ an EPUB3 Textbook editor for GitHub.
 
 This package can be used in `nodejs` **or** in the browser as an AMD module or using browserify.
 
-# Table of Contents?
+# Table of Contents
 
 - [Key Features](#key-features)
 - [Overview](#overview)
