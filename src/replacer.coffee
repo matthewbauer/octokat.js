@@ -103,6 +103,9 @@ class Replacer
     else if /_at$/.test(key)
       acc[plus.camelize(key)] = new Date(value)
 
+    else if plus.camelize(key) of acc
+      acc['_' + plus.camelize(key)] = @replace(value)
+
     else
       acc[plus.camelize(key)] = @replace(value)
 
