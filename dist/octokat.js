@@ -758,44 +758,83 @@ Replacer = (function() {
   };
 
   Replacer.prototype._replaceKeyValue = function(acc, key, value) {
-    var fn, newKey;
+    var context, fn, j, k, len, newKey, re, ref1;
     if (/_url$/.test(key)) {
-      fn = (function(_this) {
-        return function() {
-          var args, context, i, j, k, len, m, match, param, ref1, url;
-          args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-          url = value;
-          i = 0;
-          while (m = /(\{[^\}]+\})/.exec(url)) {
-            match = m[1];
-            if (i < args.length) {
-              param = args[i];
-              switch (match[1]) {
-                case '/':
-                  param = "/" + param;
-                  break;
-                case '?':
-                  param = "?" + match.slice(2, -1) + "=" + param;
+      if (/(\{[^\}]+\})/.test(value)) {
+        fn = (function(_this) {
+          return function() {
+            var args, context, i, j, k, len, m, match, param, re, ref1, url;
+            args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+            url = value;
+            i = 0;
+            while (m = /(\{[^\}]+\})/.exec(url)) {
+              match = m[1];
+              if (i < args.length) {
+                param = args[i];
+                switch (match[1]) {
+                  case '/':
+                    param = "/" + param;
+                    break;
+                  case '?':
+                    param = "?" + match.slice(2, -1) + "=" + param;
+                }
+              } else {
+                param = '';
+                if (match[1] !== '/') {
+                  throw new Error("BUG: Missing required parameter " + match);
+                }
               }
-            } else {
-              param = '';
-              if (match[1] !== '/') {
-                throw new Error("BUG: Missing required parameter " + match);
+              url = url.replace(match, param);
+              i++;
+            }
+            acc = {};
+            Chainer(_this._request, url, true, {}, acc);
+            for (key in OBJECT_MATCHER) {
+              re = OBJECT_MATCHER[key];
+              if (re.test(url)) {
+                context = TREE_OPTIONS;
+                ref1 = key.split('.');
+                for (j = 0, len = ref1.length; j < len; j++) {
+                  k = ref1[j];
+                  context = context[k];
+                }
+                Chainer(_this._request, url, k, context, acc);
               }
             }
-            url = url.replace(match, param);
-            i++;
+            return acc;
+          };
+        })(this);
+      } else {
+        fn = (function(_this) {
+          return function(cb) {
+            var contentType, data, ref1, url;
+            url = value;
+            if (/upload_url$/.test(key)) {
+              ref1 = args.slice(-2), contentType = ref1[0], data = ref1[1];
+              return _this._request('POST', url, data, {
+                contentType: contentType,
+                raw: true
+              }, cb);
+            } else {
+              return _this._request('GET', url, null, null, cb);
+            }
+          };
+        })(this);
+        fn = toPromise(fn);
+        Chainer(this._request, value, k, context, fn);
+        for (key in OBJECT_MATCHER) {
+          re = OBJECT_MATCHER[key];
+          if (re.test(value)) {
+            context = TREE_OPTIONS;
+            ref1 = key.split('.');
+            for (j = 0, len = ref1.length; j < len; j++) {
+              k = ref1[j];
+              context = context[k];
+            }
+            Chainer(this._request, value, k, context, fn);
           }
-          key = key.replace(/_url$/, '');
-          context = TREE_OPTIONS;
-          ref1 = key.split('.');
-          for (j = 0, len = ref1.length; j < len; j++) {
-            k = ref1[j];
-            context = context[k];
-          }
-          return Chainer(_this._request, url, k, context, {});
-        };
-      })(this);
+        }
+      }
       fn.url = value;
       newKey = key.substring(0, key.length - '_url'.length);
       return acc[plus.camelize(newKey)] = fn;
