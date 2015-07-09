@@ -13,7 +13,7 @@ Octokat = (clientOptions={}, obj={}) ->
   _request = Request(clientOptions)
 
   replacer = new Replacer(request)
-  request = (method, path, data, options={raw:false, isBase64:false, isBoolean:false}, cb) ->
+  request = (method, path, data, options={raw:false, isBase64:false, isBoolean:false, all:false}, cb) ->
     # Use a slightly convoluted syntax so browserify does not include the
     # NodeJS Buffer in the browser version.
     # data is a Buffer when uploading a release asset file
@@ -32,6 +32,11 @@ Octokat = (clientOptions={}, obj={}) ->
           for k in key.split('.')
             context = context[k]
           Chainer(request, url, k, context, obj)
+
+      if options.all and obj.nextPage
+        obj.nextPage().then (more) ->
+          cb(null, obj.concat(more))
+
       return cb(null, obj)
 
   path = obj.url ? ''
