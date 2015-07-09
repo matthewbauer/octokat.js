@@ -573,11 +573,12 @@ Octokat = function(clientOptions, obj) {
         }
       }
       if (options.all && obj.nextPage) {
-        obj.nextPage().then(function(more) {
+        return obj.nextPage().then(function(more) {
           return cb(null, obj.concat(more));
         });
+      } else {
+        return cb(null, obj);
       }
-      return cb(null, obj);
     });
   };
   if (obj.url) {

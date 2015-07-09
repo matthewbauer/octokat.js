@@ -36,8 +36,8 @@ Octokat = (clientOptions={}, obj={}) ->
       if options.all and obj.nextPage
         obj.nextPage().then (more) ->
           cb(null, obj.concat(more))
-
-      return cb(null, obj)
+      else
+        cb(null, obj)
 
   if obj.url
     replacer = new Replacer(request)
