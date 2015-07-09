@@ -323,10 +323,11 @@ TREE_OPTIONS = {
 OBJECT_MATCHER = {
   'repos': /^(https?:\/\/[^\/]+)?(\/api\/v3)?\/repos\/[^\/]+\/[^\/]+$/,
   'gists': /^(https?:\/\/[^\/]+)?(\/api\/v3)?\/gists\/[^\/]+$/,
-  'issues': /^(https?:\/\/[^\/]+)?(\/api\/v3)?\/repos\/[^\/]+\/[^\/]+\/(issues|pulls)[^\/]+$/,
+  'issues': /^(https?:\/\/[^\/]+)?(\/api\/v3)?\/repos\/[^\/]+\/[^\/]+\/issues\/[^\/]+$/,
   'users': /^(https?:\/\/[^\/]+)?(\/api\/v3)?\/users\/[^\/]+$/,
   'orgs': /^(https?:\/\/[^\/]+)?(\/api\/v3)?\/orgs\/[^\/]+$/,
-  'repos.comments': /^(https?:\/\/[^\/]+)?(\/api\/v3)?\/repos\/[^\/]+\/[^\/]+\/comments\/[^\/]+$/
+  'repos.comments': /^(https?:\/\/[^\/]+)?(\/api\/v3)?\/repos\/[^\/]+\/[^\/]+\/comments\/[^\/]+$/,
+  'repos.pulls': /^(https?:\/\/[^\/]+)?(\/api\/v3)?\/repos\/[^\/]+\/[^\/]+\/pulls\/[^\/]+$/
 };
 
 PREVIEW_HEADERS = {
@@ -758,7 +759,7 @@ Replacer = (function() {
   };
 
   Replacer.prototype._replaceKeyValue = function(acc, key, value) {
-    var context, fn, j, k, len, newKey, re, ref1;
+    var _key, context, fn, j, k, len, newKey, re, ref1;
     if (/_url$/.test(key)) {
       if (/(\{[^\}]+\})/.test(value)) {
         fn = (function(_this) {
@@ -821,12 +822,12 @@ Replacer = (function() {
           };
         })(this);
         fn = toPromise(fn);
-        Chainer(this._request, value, k, context, fn);
-        for (key in OBJECT_MATCHER) {
-          re = OBJECT_MATCHER[key];
+        Chainer(this._request, value, true, {}, fn);
+        for (_key in OBJECT_MATCHER) {
+          re = OBJECT_MATCHER[_key];
           if (re.test(value)) {
             context = TREE_OPTIONS;
-            ref1 = key.split('.');
+            ref1 = _key.split('.');
             for (j = 0, len = ref1.length; j < len; j++) {
               k = ref1[j];
               context = context[k];
