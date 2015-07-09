@@ -400,7 +400,7 @@ OBJECT_MATCHER =
   ///
   'issues': /// ^ (https?://[^/]+)? (/api/v3)?
     /repos/ [^/]+ / [^/]+
-    /(issues|pulls) [^/]+
+    /issues/ [^/]+
     $
   ///
   'users': /// ^ (https?://[^/]+)? (/api/v3)?
@@ -416,6 +416,11 @@ OBJECT_MATCHER =
     (/api/v3)?        # Optional API root for enterprise GitHub users
     /repos/ [^/]+ / [^/]+
     /comments/ [^/]+
+    $
+  ///
+  'repos.pulls': /// ^ (https?://[^/]+)? (/api/v3)?
+    /repos/ [^/]+ / [^/]+
+    /pulls/ [^/]+
     $
   ///
 

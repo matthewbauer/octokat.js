@@ -112,11 +112,11 @@ class Replacer
           else
             @_request('GET', url, null, null, cb) # TODO: Heuristically set the isBoolean flag
         fn = toPromise(fn)
-        Chainer(@_request, value, k, context, fn)
-        for key, re of OBJECT_MATCHER
+        Chainer(@_request, value, true, {}, fn)
+        for _key, re of OBJECT_MATCHER
           if re.test(value)
             context = TREE_OPTIONS
-            for k in key.split('.')
+            for k in _key.split('.')
               context = context[k]
             Chainer(@_request, value, k, context, fn)
       fn.url = value
