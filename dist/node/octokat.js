@@ -59,7 +59,7 @@
           }
         }
         if (options.all && obj.nextPage) {
-          return obj.nextPage().then(function(more) {
+          return obj.nextPage.fetchAll().then(function(more) {
             return cb(null, obj.concat(more));
           });
         } else {
