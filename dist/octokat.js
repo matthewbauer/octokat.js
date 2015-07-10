@@ -573,8 +573,9 @@ Octokat = function(clientOptions, obj) {
         }
       }
       if (options.all && obj.nextPage) {
+        val = obj;
         return obj.nextPage.fetchAll().then(function(more) {
-          return cb(null, [].concat(obj, more));
+          return cb(null, [].concat(val, more));
         });
       } else {
         return cb(null, obj);
