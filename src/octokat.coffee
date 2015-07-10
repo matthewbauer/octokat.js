@@ -35,8 +35,7 @@ Octokat = (clientOptions={}, obj={}) ->
 
       if options.all and obj.nextPage
         obj.nextPage.fetchAll().then (more) ->
-          obj = obj.concat(more)
-          cb(null, obj)
+          cb(null, [].concat(obj, more))
       else
         cb(null, obj)
 
