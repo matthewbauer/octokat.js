@@ -60,7 +60,8 @@
         }
         if (options.all && obj.nextPage) {
           return obj.nextPage.fetchAll().then(function(more) {
-            return cb(null, obj.concat(more));
+            obj = obj.concat(more);
+            return cb(null, obj);
           });
         } else {
           return cb(null, obj);
