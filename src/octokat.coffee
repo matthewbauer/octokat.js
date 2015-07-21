@@ -7,13 +7,23 @@ Request = require './request'
 
 # Combine all the classes into one client
 
-Octokat = (clientOptions={}, obj={}) ->
+reChainChildren = (request, url, obj) ->
+  for key, re of OBJECT_MATCHER
+    if re.test(obj.url)
+      context = TREE_OPTIONS
+      for k in key.split('.')
+        context = context[k]
+      Chainer(request, url, k, context, obj)
+  obj
+
+Octokat = (clientOptions={}) ->
 
   # For each request, convert the JSON into Objects
   _request = Request(clientOptions)
 
-  request = (method, path, data, options={raw:false, isBase64:false, isBoolean:false, all:false}, cb) ->
+  request = (method, path, data, options={raw:false, isBase64:false, isBoolean:false}, cb) ->
     replacer = new Replacer(request)
+
     # Use a slightly convoluted syntax so browserify does not include the
     # NodeJS Buffer in the browser version.
     # data is a Buffer when uploading a release asset file
@@ -26,34 +36,25 @@ Octokat = (clientOptions={}, obj={}) ->
 
       obj = replacer.replace(val)
       url = obj.url or path
-      for key, re of OBJECT_MATCHER
-        if re.test(url)
-          context = TREE_OPTIONS
-          for k in key.split('.')
-            context = context[k]
-          Chainer(request, url, k, context, obj)
+      reChainChildren(request, url, obj)
+      return cb(null, obj)
 
-      if options.all and obj.nextPage
-        obj.nextPage().then (more) ->
-          cb(null, obj.concat(more))
-      else
-        cb(null, obj)
-
-  if obj.url
-    replacer = new Replacer(request)
-    obj = replacer.replace(obj)
-    Chainer(request, obj.url, true, {}, obj)
-    for key, re of OBJECT_MATCHER
-      if re.test(obj.url)
-        context = TREE_OPTIONS
-        for k in key.split('.')
-          context = context[k]
-        Chainer(request, obj.url, k, context, obj)
-  else
-    Chainer(request, '', null, TREE_OPTIONS, obj)
+  path = ''
+  obj = {}
+  Chainer(request, path, null, TREE_OPTIONS, obj)
 
   # Special case for `me`
   obj.me = obj.user
+
+  obj.parse = (jsonObj) ->
+    if jsonObj.url
+      replacer = new Replacer(request)
+      jsonObj = replacer.replace(jsonObj)
+      Chainer(request, jsonObj.url, true, {}, jsonObj)
+      reChainChildren(request, jsonObj.url, jsonObj)
+    else
+      Chainer(request, '', null, TREE_OPTIONS, jsonObj)
+    jsonObj
 
   # Add the GitHub Status API https://status.github.com/api
   obj.status =     toPromise (cb) -> request('GET', 'https://status.github.com/api/status.json', null, null, cb)

@@ -52,12 +52,6 @@ Chainer = function(request, _path, name, contextTree, fn) {
       URL_TESTER(_path);
       return request('GET', "" + _path + (toQueryString(config)), null, {}, cb);
     },
-    fetchAll: function(cb, config) {
-      URL_TESTER(_path);
-      return request('GET', "" + _path + (toQueryString(config)), null, {
-        all: true
-      }, cb);
-    },
     read: function(cb, config) {
       URL_TESTER(_path);
       return request('GET', "" + _path + (toQueryString(config)), null, {
@@ -132,7 +126,7 @@ module.exports = Chainer;
 },{"./grammar":2,"./helper-promise":4,"./plus":6}],2:[function(require,module,exports){
 var DEFAULT_HEADER, OBJECT_MATCHER, PREVIEW_HEADERS, TREE_OPTIONS, URL_VALIDATOR;
 
-URL_VALIDATOR = /^(https?:\/\/[^\/]+)?(\/api\/v3)?\/(zen|octocat|users|issues|gists|emojis|markdown|meta|rate_limit|feeds|events|notifications|notifications\/threads(\/[^\/]+)|notifications\/threads(\/[^\/]+)\/subscription|gitignore\/templates(\/[^\/]+)?|user|user\/(repos|orgs|followers|following(\/[^\/]+)?|emails(\/[^\/]+)?|issues|starred|starred(\/[^\/]+){2}|teams)|orgs\/[^\/]+|orgs\/[^\/]+\/(repos|issues|members|events|teams)|teams\/[^\/]+|teams\/[^\/]+\/(members(\/[^\/]+)?|memberships\/[^\/]+|repos|repos(\/[^\/]+){2})|users\/[^\/]+|users\/[^\/]+\/(repos|orgs|gists|followers|following(\/[^\/]+){0,2}|keys|starred|received_events(\/public)?|events(\/public)?|events\/orgs\/[^\/]+)|search\/(repositories|issues|users|code)|gists\/(public|starred|([a-f0-9]{20}|[0-9]+)|([a-f0-9]{20}|[0-9]+)\/forks|([a-f0-9]{20}|[0-9]+)\/comments(\/[0-9]+)?|([a-f0-9]{20}|[0-9]+)\/star)|repos(\/[^\/]+){2}|repos(\/[^\/]+){2}\/(readme|tarball(\/[^\/]+)?|zipball(\/[^\/]+)?|compare\/[a-f0-9:]{40}\.{3}[a-f0-9:]{40}|deployments(\/[0-9]+)?|deployments\/[0-9]+\/statuses(\/[0-9]+)?|hooks|hooks\/[^\/]+|hooks\/[^\/]+\/tests|assignees|languages|teams|tags|branches(\/[^\/]+){0,2}|contributors|subscribers|subscription|stargazers|comments(\/[0-9]+)?|downloads(\/[0-9]+)?|forks|milestones|labels|releases|releases\/([0-9]+)|releases\/([0-9]+)\/assets|releases\/latest|releases\/tags\/([^\/]+)|releases\/assets\/([0-9]+)|events|notifications|merges|statuses\/[a-f0-9]{40}|pages|pages\/builds|pages\/builds\/latest|commits|commits\/[a-f0-9]{40}|commits\/[a-f0-9]{40}\/(comments|status|statuses)?|contents\/|contents(\/[^\/]+)*|collaborators(\/[^\/]+)?|(issues|pulls)|(issues|pulls)\/(|events|events\/[0-9]+|comments(\/[0-9]+)?|[0-9]+|[0-9]+\/events|[0-9]+\/comments)|pulls\/[0-9]+\/(files|commits)|git\/(refs|refs\/heads(\/[^\/]+)?|trees(\/[^\/]+)?|blobs(\/[a-f0-9]{40}$)?|commits(\/[a-f0-9]{40}$)?)|stats\/(contributors|commit_activity|code_frequency|participation|punch_card))|licenses|licenses\/([^\/]+)|authorizations|authorizations\/((\d+)|clients\/([^\/]{20})|clients\/([^\/]{20})\/([^\/]+))|applications\/([^\/]{20})\/tokens|applications\/([^\/]{20})\/tokens\/([^\/]+)|enterprise\/(settings\/license|stats\/(issues|hooks|milestones|orgs|comments|pages|users|gists|pulls|repos|all))|staff\/indexing_jobs|users\/[^\/]+\/(site_admin|suspended)|setup\/api\/(start|upgrade|configcheck|configure|settings(authorized-keys)?|maintenance)|([^\/]+\/){2}(pull\/([0-9]+(\.diff))))$/;
+URL_VALIDATOR = /^(https?:\/\/[^\/]+)?(\/api\/v3)?\/(zen|octocat|users|issues|gists|emojis|markdown|meta|rate_limit|feeds|events|notifications|notifications\/threads(\/[^\/]+)|notifications\/threads(\/[^\/]+)\/subscription|gitignore\/templates(\/[^\/]+)?|user|user\/(repos|orgs|followers|following(\/[^\/]+)?|emails(\/[^\/]+)?|issues|starred|starred(\/[^\/]+){2}|teams)|orgs\/[^\/]+|orgs\/[^\/]+\/(repos|issues|members|events|teams)|teams\/[^\/]+|teams\/[^\/]+\/(members(\/[^\/]+)?|memberships\/[^\/]+|repos|repos(\/[^\/]+){2})|users\/[^\/]+|users\/[^\/]+\/(repos|orgs|gists|followers|following(\/[^\/]+){0,2}|keys|starred|received_events(\/public)?|events(\/public)?|events\/orgs\/[^\/]+)|search\/(repositories|issues|users|code)|gists\/(public|starred|([a-f0-9]{20}|[0-9]+)|([a-f0-9]{20}|[0-9]+)\/forks|([a-f0-9]{20}|[0-9]+)\/comments(\/[0-9]+)?|([a-f0-9]{20}|[0-9]+)\/star)|repos(\/[^\/]+){2}|repos(\/[^\/]+){2}\/(readme|tarball(\/[^\/]+)?|zipball(\/[^\/]+)?|compare\/[a-f0-9:]{40}\.{3}[a-f0-9:]{40}|deployments(\/[0-9]+)?|deployments\/[0-9]+\/statuses(\/[0-9]+)?|hooks|hooks\/[^\/]+|hooks\/[^\/]+\/tests|assignees|languages|teams|tags|branches(\/[^\/]+){0,2}|contributors|subscribers|subscription|stargazers|comments(\/[0-9]+)?|downloads(\/[0-9]+)?|forks|milestones|milestones\/[0-9]+|milestones\/[0-9]+\/labels|labels(\/[^\/]+)?|releases|releases\/([0-9]+)|releases\/([0-9]+)\/assets|releases\/latest|releases\/tags\/([^\/]+)|releases\/assets\/([0-9]+)|events|notifications|merges|statuses\/[a-f0-9]{40}|pages|pages\/builds|pages\/builds\/latest|commits|commits\/[a-f0-9]{40}|commits\/[a-f0-9]{40}\/(comments|status|statuses)?|contents\/|contents(\/[^\/]+)*|collaborators(\/[^\/]+)?|(issues|pulls)|(issues|pulls)\/(events|events\/[0-9]+|comments(\/[0-9]+)?|[0-9]+|[0-9]+\/events|[0-9]+\/comments|[0-9]+\/labels(\/[^\/]+)?)|pulls\/[0-9]+\/(files|commits)|git\/(refs|refs\/heads(\/[^\/]+)?|trees(\/[^\/]+)?|blobs(\/[a-f0-9]{40}$)?|commits(\/[a-f0-9]{40}$)?)|stats\/(contributors|commit_activity|code_frequency|participation|punch_card))|licenses|licenses\/([^\/]+)|authorizations|authorizations\/((\d+)|clients\/([^\/]{20})|clients\/([^\/]{20})\/([^\/]+))|applications\/([^\/]{20})\/tokens|applications\/([^\/]{20})\/tokens\/([^\/]+)|enterprise\/(settings\/license|stats\/(issues|hooks|milestones|orgs|comments|pages|users|gists|pulls|repos|all))|staff\/indexing_jobs|users\/[^\/]+\/(site_admin|suspended)|setup\/api\/(start|upgrade|configcheck|configure|settings(authorized-keys)?|maintenance))$/;
 
 TREE_OPTIONS = {
   'zen': false,
@@ -228,7 +222,9 @@ TREE_OPTIONS = {
     'comments': false,
     'downloads': false,
     'forks': false,
-    'milestones': false,
+    'milestones': {
+      'labels': false
+    },
     'labels': false,
     'releases': {
       'assets': false,
@@ -244,7 +240,8 @@ TREE_OPTIONS = {
       'comments': false,
       'commits': false,
       'files': false,
-      'events': false
+      'events': false,
+      'labels': false
     },
     'pages': {
       'builds': {
@@ -260,7 +257,8 @@ TREE_OPTIONS = {
     'collaborators': false,
     'issues': {
       'events': false,
-      'comments': false
+      'comments': false,
+      'labels': false
     },
     'git': {
       'refs': {
@@ -323,11 +321,10 @@ TREE_OPTIONS = {
 OBJECT_MATCHER = {
   'repos': /^(https?:\/\/[^\/]+)?(\/api\/v3)?\/repos\/[^\/]+\/[^\/]+$/,
   'gists': /^(https?:\/\/[^\/]+)?(\/api\/v3)?\/gists\/[^\/]+$/,
-  'issues': /^(https?:\/\/[^\/]+)?(\/api\/v3)?\/repos\/[^\/]+\/[^\/]+\/issues\/[^\/]+$/,
+  'issues': /^(https?:\/\/[^\/]+)?(\/api\/v3)?\/repos\/[^\/]+\/[^\/]+\/(issues|pulls)[^\/]+$/,
   'users': /^(https?:\/\/[^\/]+)?(\/api\/v3)?\/users\/[^\/]+$/,
   'orgs': /^(https?:\/\/[^\/]+)?(\/api\/v3)?\/orgs\/[^\/]+$/,
-  'repos.comments': /^(https?:\/\/[^\/]+)?(\/api\/v3)?\/repos\/[^\/]+\/[^\/]+\/comments\/[^\/]+$/,
-  'repos.pulls': /^(https?:\/\/[^\/]+)?(\/api\/v3)?\/repos\/[^\/]+\/[^\/]+\/pulls\/[^\/]+$/
+  'repos.comments': /^(https?:\/\/[^\/]+)?(\/api\/v3)?\/repos\/[^\/]+\/[^\/]+\/comments\/[^\/]+$/
 };
 
 PREVIEW_HEADERS = {
@@ -513,7 +510,7 @@ module.exports = {
 
 },{}],5:[function(require,module,exports){
 (function (global){
-var Chainer, OBJECT_MATCHER, Octokat, Replacer, Request, TREE_OPTIONS, plus, ref, toPromise;
+var Chainer, OBJECT_MATCHER, Octokat, Replacer, Request, TREE_OPTIONS, plus, reChainChildren, ref, toPromise;
 
 plus = require('./plus');
 
@@ -527,13 +524,27 @@ Request = require('./request');
 
 toPromise = require('./helper-promise').toPromise;
 
-Octokat = function(clientOptions, obj) {
-  var _request, context, i, k, key, len, re, ref1, replacer, request;
+reChainChildren = function(request, url, obj) {
+  var context, i, k, key, len, re, ref1;
+  for (key in OBJECT_MATCHER) {
+    re = OBJECT_MATCHER[key];
+    if (re.test(obj.url)) {
+      context = TREE_OPTIONS;
+      ref1 = key.split('.');
+      for (i = 0, len = ref1.length; i < len; i++) {
+        k = ref1[i];
+        context = context[k];
+      }
+      Chainer(request, url, k, context, obj);
+    }
+  }
+  return obj;
+};
+
+Octokat = function(clientOptions) {
+  var _request, obj, path, request;
   if (clientOptions == null) {
     clientOptions = {};
-  }
-  if (obj == null) {
-    obj = {};
   }
   _request = Request(clientOptions);
   request = function(method, path, data, options, cb) {
@@ -542,8 +553,7 @@ Octokat = function(clientOptions, obj) {
       options = {
         raw: false,
         isBase64: false,
-        isBoolean: false,
-        all: false
+        isBoolean: false
       };
     }
     replacer = new Replacer(request);
@@ -551,7 +561,7 @@ Octokat = function(clientOptions, obj) {
       data = replacer.uncamelize(data);
     }
     return _request(method, path, data, options, function(err, val) {
-      var context, i, k, key, len, re, ref2, url;
+      var obj, url;
       if (err) {
         return cb(err);
       }
@@ -560,47 +570,26 @@ Octokat = function(clientOptions, obj) {
       }
       obj = replacer.replace(val);
       url = obj.url || path;
-      for (key in OBJECT_MATCHER) {
-        re = OBJECT_MATCHER[key];
-        if (re.test(url)) {
-          context = TREE_OPTIONS;
-          ref2 = key.split('.');
-          for (i = 0, len = ref2.length; i < len; i++) {
-            k = ref2[i];
-            context = context[k];
-          }
-          Chainer(request, url, k, context, obj);
-        }
-      }
-      if (options.all && obj.nextPage) {
-        return obj.nextPage().then(function(more) {
-          return cb(null, obj.concat(more));
-        });
-      } else {
-        return cb(null, obj);
-      }
+      reChainChildren(request, url, obj);
+      return cb(null, obj);
     });
   };
-  if (obj.url) {
-    replacer = new Replacer(request);
-    obj = replacer.replace(obj);
-    Chainer(request, obj.url, true, {}, obj);
-    for (key in OBJECT_MATCHER) {
-      re = OBJECT_MATCHER[key];
-      if (re.test(obj.url)) {
-        context = TREE_OPTIONS;
-        ref1 = key.split('.');
-        for (i = 0, len = ref1.length; i < len; i++) {
-          k = ref1[i];
-          context = context[k];
-        }
-        Chainer(request, obj.url, k, context, obj);
-      }
-    }
-  } else {
-    Chainer(request, '', null, TREE_OPTIONS, obj);
-  }
+  path = '';
+  obj = {};
+  Chainer(request, path, null, TREE_OPTIONS, obj);
   obj.me = obj.user;
+  obj.parse = function(jsonObj) {
+    var replacer;
+    if (jsonObj.url) {
+      replacer = new Replacer(request);
+      jsonObj = replacer.replace(jsonObj);
+      Chainer(request, jsonObj.url, true, {}, jsonObj);
+      reChainChildren(request, jsonObj.url, jsonObj);
+    } else {
+      Chainer(request, '', null, TREE_OPTIONS, jsonObj);
+    }
+    return jsonObj;
+  };
   obj.status = toPromise(function(cb) {
     return request('GET', 'https://status.github.com/api/status.json', null, null, cb);
   });
@@ -722,7 +711,7 @@ Replacer = (function() {
     }
     url = acc.url;
     if (url) {
-      Chainer(this._request, url, true, {}, acc);
+      Chainer(this._request, url, true, null, acc);
     }
     for (key in OBJECT_MATCHER) {
       re = OBJECT_MATCHER[key];
@@ -760,90 +749,57 @@ Replacer = (function() {
   };
 
   Replacer.prototype._replaceKeyValue = function(acc, key, value) {
-    var _key, context, fn, j, k, len, newKey, re, ref1;
+    var fn, newKey;
     if (/_url$/.test(key)) {
-      if (/(\{[^\}]+\})/.test(value)) {
-        fn = (function(_this) {
-          return function() {
-            var args, context, i, j, k, len, m, match, param, re, ref1, url;
-            args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-            url = value;
-            i = 0;
-            while (m = /(\{[^\}]+\})/.exec(url)) {
-              match = m[1];
-              if (i < args.length) {
-                param = args[i];
-                switch (match[1]) {
-                  case '/':
-                    param = "/" + param;
-                    break;
-                  case '?':
-                    param = "?" + match.slice(2, -1) + "=" + param;
-                }
-              } else {
-                param = '';
-                if (match[1] !== '/') {
-                  throw new Error("BUG: Missing required parameter " + match);
-                }
-              }
-              url = url.replace(match, param);
-              i++;
-            }
-            acc = {};
-            Chainer(_this._request, url, true, {}, acc);
-            for (key in OBJECT_MATCHER) {
-              re = OBJECT_MATCHER[key];
-              if (re.test(url)) {
-                context = TREE_OPTIONS;
-                ref1 = key.split('.');
-                for (j = 0, len = ref1.length; j < len; j++) {
-                  k = ref1[j];
-                  context = context[k];
-                }
-                Chainer(_this._request, url, k, context, acc);
-              }
-            }
-            return acc;
-          };
-        })(this);
-      } else {
-        fn = (function(_this) {
-          return function(cb) {
-            var contentType, data, ref1, url;
-            url = value;
-            if (/upload_url$/.test(key)) {
-              ref1 = args.slice(-2), contentType = ref1[0], data = ref1[1];
-              return _this._request('POST', url, data, {
-                contentType: contentType,
-                raw: true
-              }, cb);
-            } else {
-              return _this._request('GET', url, null, null, cb);
-            }
-          };
-        })(this);
-        fn = toPromise(fn);
-        Chainer(this._request, value, true, {}, fn);
-        for (_key in OBJECT_MATCHER) {
-          re = OBJECT_MATCHER[_key];
-          if (re.test(value)) {
-            context = TREE_OPTIONS;
-            ref1 = _key.split('.');
-            for (j = 0, len = ref1.length; j < len; j++) {
-              k = ref1[j];
-              context = context[k];
-            }
-            Chainer(this._request, value, k, context, fn);
+      fn = (function(_this) {
+        return function() {
+          var args, cb, contentType, data, i, m, match, param, ref1, url;
+          cb = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
+          if (!(/\{/.test(value) || /_page_url$/.test(key))) {
+            console.warn('Deprecation warning: Use the .fooUrl field instead of calling the method');
           }
-        }
-      }
+          url = value;
+          i = 0;
+          while (m = /(\{[^\}]+\})/.exec(url)) {
+            match = m[1];
+            if (i < args.length) {
+              param = args[i];
+              switch (match[1]) {
+                case '/':
+                  param = "/" + param;
+                  break;
+                case '?':
+                  param = "?" + match.slice(2, -1) + "=" + param;
+              }
+            } else {
+              param = '';
+              if (match[1] !== '/') {
+                throw new Error("BUG: Missing required parameter " + match);
+              }
+            }
+            url = url.replace(match, param);
+            i++;
+          }
+          if (/upload_url$/.test(key)) {
+            ref1 = args.slice(-2), contentType = ref1[0], data = ref1[1];
+            return _this._request('POST', url, data, {
+              contentType: contentType,
+              raw: true
+            }, cb);
+          } else {
+            return _this._request('GET', url, null, null, cb);
+          }
+        };
+      })(this);
+      fn = toPromise(fn);
       fn.url = value;
       newKey = key.substring(0, key.length - '_url'.length);
-      return acc[plus.camelize(newKey)] = fn;
+      acc[plus.camelize(newKey)] = fn;
+      if (!/\{/.test(value)) {
+        return acc[plus.camelize(key)] = value;
+      }
     } else if (/_at$/.test(key)) {
-      return acc[plus.camelize(key)] = new Date(value);
-    } else if (typeof acc[plus.camelize(key)] === 'function') {
-
+      return acc[plus.camelize(key)] = value ? new Date(value) : null;
     } else {
       return acc[plus.camelize(key)] = this.replace(value);
     }
@@ -919,7 +875,7 @@ ETagResponse = (function() {
 })();
 
 Request = function(clientOptions) {
-  var _cachedETags, _listeners;
+  var _cachedETags, cacheHandler, emitter;
   if (clientOptions == null) {
     clientOptions = {};
   }
@@ -932,8 +888,18 @@ Request = function(clientOptions) {
   if (clientOptions.usePostInsteadOfPatch == null) {
     clientOptions.usePostInsteadOfPatch = false;
   }
-  _listeners = [];
+  emitter = clientOptions.emitter || {
+    emit: function() {}
+  };
   _cachedETags = {};
+  cacheHandler = clientOptions.cacheHandler || {
+    get: function(method, path) {
+      return _cachedETags[method + " " + path];
+    },
+    add: function(method, path, eTag, data, status) {
+      return _cachedETags[method + " " + path] = new ETagResponse(eTag, data, status);
+    }
+  };
   return function(method, path, data, options, cb) {
     var ajaxConfig, auth, headers, mimeType;
     if (options == null) {
@@ -978,8 +944,8 @@ Request = function(clientOptions) {
     if (userAgent) {
       headers['User-Agent'] = userAgent;
     }
-    if ((method + " " + path) in _cachedETags) {
-      headers['If-None-Match'] = _cachedETags[method + " " + path].eTag;
+    if (cacheHandler.get(method, path)) {
+      headers['If-None-Match'] = cacheHandler.get(method, path).eTag;
     } else {
       headers['If-Modified-Since'] = 'Thu, 01 Jan 1970 00:00:00 GMT';
     }
@@ -1016,18 +982,15 @@ Request = function(clientOptions) {
       };
     }
     return ajax(ajaxConfig, function(err, val) {
-      var converted, discard, eTag, eTagResponse, href, i, j, jqXHR, json, k, l, len, len1, links, listener, part, rateLimit, rateLimitRemaining, ref, ref1, ref2, rel;
+      var converted, discard, eTag, eTagResponse, href, i, j, jqXHR, json, k, len, links, part, rateLimit, rateLimitRemaining, ref, ref1, ref2, rel;
       jqXHR = err || val;
       rateLimit = parseFloat(jqXHR.getResponseHeader('X-RateLimit-Limit'));
       rateLimitRemaining = parseFloat(jqXHR.getResponseHeader('X-RateLimit-Remaining'));
-      for (j = 0, len = _listeners.length; j < len; j++) {
-        listener = _listeners[j];
-        listener(rateLimitRemaining, rateLimit, method, path, data, options);
-      }
+      emitter.emit('request', rateLimitRemaining, rateLimit, method, path, data, options);
       if (!err) {
         if (jqXHR.status === 304) {
-          if (clientOptions.useETags && _cachedETags[method + " " + path]) {
-            eTagResponse = _cachedETags[method + " " + path];
+          if (clientOptions.useETags && cacheHandler.get(method, path)) {
+            eTagResponse = cacheHandler.get(method, path);
             return cb(null, eTagResponse.data, eTagResponse.status, jqXHR);
           } else {
             return cb(null, jqXHR.responseText, status, jqXHR);
@@ -1041,8 +1004,8 @@ Request = function(clientOptions) {
             data = JSON.parse(jqXHR.responseText);
             links = jqXHR.getResponseHeader('Link');
             ref = (links != null ? links.split(',') : void 0) || [];
-            for (k = 0, len1 = ref.length; k < len1; k++) {
-              part = ref[k];
+            for (j = 0, len = ref.length; j < len; j++) {
+              part = ref[j];
               ref1 = part.match(/<([^>]+)>;\ rel="([^"]+)"/), discard = ref1[0], href = ref1[1], rel = ref1[2];
               data[rel + "_page_url"] = href;
             }
@@ -1051,14 +1014,14 @@ Request = function(clientOptions) {
           }
           if (method === 'GET' && options.isBase64) {
             converted = '';
-            for (i = l = 0, ref2 = data.length; 0 <= ref2 ? l < ref2 : l > ref2; i = 0 <= ref2 ? ++l : --l) {
+            for (i = k = 0, ref2 = data.length; 0 <= ref2 ? k < ref2 : k > ref2; i = 0 <= ref2 ? ++k : --k) {
               converted += String.fromCharCode(data.charCodeAt(i) & 0xff);
             }
             data = converted;
           }
           if (method === 'GET' && jqXHR.getResponseHeader('ETag') && clientOptions.useETags) {
             eTag = jqXHR.getResponseHeader('ETag');
-            _cachedETags[method + " " + path] = new ETagResponse(eTag, data, jqXHR.status);
+            cacheHandler.add(method, path, eTag, data, jqXHR.status);
           }
           return cb(null, data, jqXHR.status, jqXHR);
         }

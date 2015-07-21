@@ -112,7 +112,9 @@ URL_VALIDATOR = /// ^
         | downloads (/[0-9]+)?
         | forks
         | milestones
-        | labels
+        | milestones / [0-9]+
+        | milestones / [0-9]+ / labels
+        | labels (/[^/]+)?
         | releases
         | releases / ([0-9]+)
         | releases / ([0-9]+) / assets
@@ -138,12 +140,13 @@ URL_VALIDATOR = /// ^
         | collaborators (/[^/]+)?
         | (issues|pulls)
         | (issues|pulls) / (
-            | events
+              events
             | events/ [0-9]+
             | comments (/[0-9]+)?
             | [0-9]+
             | [0-9]+ /events
             | [0-9]+ /comments
+            | [0-9]+ /labels (/[^/]+)?
             )
         | pulls/ [0-9]+ / (
               files
@@ -215,13 +218,6 @@ URL_VALIDATOR = /// ^
           )?
         | maintenance # GET/POST
       )
-    | ([^/]+/){2} (
-          pull/ (
-            [0-9]+ (
-              \.diff
-            )
-          )
-        )
 
   )
   $
@@ -311,7 +307,8 @@ TREE_OPTIONS =
     'comments'      : false
     'downloads'     : false
     'forks'         : false
-    'milestones'    : false
+    'milestones':
+      'labels'      : false
     'labels'        : false
     'releases':
       'assets'      : false
@@ -327,6 +324,7 @@ TREE_OPTIONS =
       'commits'     : false
       'files'       : false
       'events'      : false
+      'labels'      : false
     'pages':
       'builds':
         'latest'    : false
@@ -339,6 +337,7 @@ TREE_OPTIONS =
     'issues':
       'events'      : false
       'comments'    : false
+      'labels'      : false
     'git':
       'refs':
         'heads'     : false
@@ -400,7 +399,7 @@ OBJECT_MATCHER =
   ///
   'issues': /// ^ (https?://[^/]+)? (/api/v3)?
     /repos/ [^/]+ / [^/]+
-    /issues/ [^/]+
+    /(issues|pulls) [^/]+
     $
   ///
   'users': /// ^ (https?://[^/]+)? (/api/v3)?
@@ -416,11 +415,6 @@ OBJECT_MATCHER =
     (/api/v3)?        # Optional API root for enterprise GitHub users
     /repos/ [^/]+ / [^/]+
     /comments/ [^/]+
-    $
-  ///
-  'repos.pulls': /// ^ (https?://[^/]+)? (/api/v3)?
-    /repos/ [^/]+ / [^/]+
-    /pulls/ [^/]+
     $
   ///
 

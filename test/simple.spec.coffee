@@ -127,6 +127,24 @@ define ['chai', 'cs!./test-config'], ({assert, expect}, {client, USERNAME, TOKEN
     before () ->
       STATE[GH] = client
 
+    describe 'Synchronous methods', () ->
+      it 'supports octo.parse(json)', () ->
+        json =
+          url: 'https://api.github.com/repos/philschatz/octokat.js'
+          foo_url: 'http://philschatz.com'
+          field: 'Hello there!'
+          bar:
+            baz_url: 'http://philschatz.com'
+        ret = client.parse(json)
+        expect(ret.field).to.equal(json.field)
+        expect(ret.url).to.equal(json.url)
+        expect(ret.foo.url).to.equal(json.foo_url)
+        # Make sure the parse recurses
+        expect(ret.bar.baz.url).to.equal(json.bar.baz_url)
+        # Make sure the obj was detected to be a repo
+        expect(ret.fetch).to.not.be.null
+        expect(ret.issues).to.not.be.null
+
     describe 'Miscellaneous APIs', () ->
       itIsOk(GH, 'zen.read')
       itIsOk(GH, 'octocat.read')
@@ -215,6 +233,11 @@ define ['chai', 'cs!./test-config'], ({assert, expect}, {client, USERNAME, TOKEN
       itIsArray(REPO, 'labels.fetch')
       itIsArray(REPO, 'stargazers.fetch')
       itIsArray(REPO, 'forks.fetch')
+
+      it "camelCases URL fields that are not templated (ie #{REPO}.htmlUrl)", (done) ->
+        STATE[REPO].fetch().then (repo) ->
+          expect(repo.htmlUrl).to.be.a('string')
+          done()
 
       describe "#{REPO}.issues...", () ->
         itIsArray(REPO, 'issues.fetch')
@@ -311,6 +334,11 @@ define ['chai', 'cs!./test-config'], ({assert, expect}, {client, USERNAME, TOKEN
       itIsArray(USER, 'receivedEvents.fetch')
       itIsArray(USER, 'starred.fetch')
 
+      it "camelCases URL fields that are not templated (ie #{USER}.avatarUrl)", (done) ->
+        STATE[USER].fetch().then (repo) ->
+          expect(repo.htmlUrl).to.be.a('string')
+          expect(repo.avatarUrl).to.be.a('string')
+          done()
 
     describe "#{ORG} = #{GH}.orgs(ORG_NAME)", () ->
 
@@ -406,9 +434,10 @@ define ['chai', 'cs!./test-config'], ({assert, expect}, {client, USERNAME, TOKEN
         # itIsOk(REPO, 'issues.comments.update', 43218269, {body: 'Test comment updated'})
         itIsOk(REPO, 'issues.comments', 43218269, 'fetch')
 
-        it 'comment.issue()', (done) ->
-          trapFail STATE[REPO].issues.comments(43218269).fetch()
-          .then (comment) ->
-            comment.issue()
-            .then (v) ->
-              done()
+        # Deprecated. Now provides only `issueUrl`
+        # it 'comment.issue()', (done) ->
+        #   trapFail STATE[REPO].issues.comments(43218269).fetch()
+        #   .then (comment) ->
+        #     comment.issue()
+        #     .then (v) ->
+        #       done()
